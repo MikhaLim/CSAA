@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+#hangman-container {
+    background: white;
+    padding: 20px;
+    width: 300px;
+    margin: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#word-display {
+    font-size: 24px;
+    letter-spacing: 5px;
+}
+
+#letter-input {
+    width: 30px;
+    font-size: 20px;
+    text-align: center;
+}
