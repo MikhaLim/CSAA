@@ -15,42 +15,41 @@ document.getElementById("attempts").innerText = attemptsLeft;
 function createGrid() {
     let grid = document.getElementById("word-grid");
     grid.innerHTML = "";
-    for (let i = 0; i < 5; i++) {
+    let i = 0;
+    while (i < 5) {
         let row = document.createElement("div");
         row.classList.add("row");
-        for (let j = 0; j < 5; j++) {
+        let j = 0;
+        while (j < 5) {
             let box = document.createElement("div");
             box.classList.add("box");
             row.appendChild(box);
+            j++;
         }
         grid.appendChild(row);
+        i++;
     }
 }
 
-document.getElementById("letter-input").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-        submitGuess();
-    }
-});
-
 function submitGuess() {
-    let inputElement = document.getElementById("letter-input");
-    let guessedWord = inputElement.value.toLowerCase();
-    inputElement.value = "";
+    if (currentAttempt >= 5) return;
+
+    let guessedWord = prompt("Enter a 5-letter word:").toLowerCase();
     
-    if (guessedWord.length !== 5 || !/^[a-z]+$/.test(guessedWord)) {
-        document.getElementById("message").innerText = "Enter a valid 5-letter word!";
+    if (!guessedWord || guessedWord.length !== 5 || !/^[a-z]+$/.test(guessedWord)) {
+        alert("Enter a valid 5-letter word!");
         return;
     }
     
     let gridRows = document.getElementById("word-grid").children;
     let currentRow = gridRows[currentAttempt];
-    
-    for (let i = 0; i < 5; i++) {
+
+    let i = 0;
+    while (i < 5) {
         let box = currentRow.children[i];
         box.innerText = guessedWord[i];
         box.classList.remove("correct", "partial", "wrong");
-        
+
         if (guessedWord[i] === selectedWord[i]) {
             box.classList.add("correct");
         } else if (selectedWord.includes(guessedWord[i])) {
@@ -58,6 +57,7 @@ function submitGuess() {
         } else {
             box.classList.add("wrong");
         }
+        i++;
     }
     
     currentAttempt++;
@@ -65,11 +65,10 @@ function submitGuess() {
     document.getElementById("attempts").innerText = attemptsLeft;
 
     if (guessedWord === selectedWord) {
-        document.getElementById("message").innerText = "You win! 🎉";
-        document.getElementById("letter-input").disabled = true;
+        alert("You win! 🎉");
+        return;
     } else if (attemptsLeft === 0) {
-        document.getElementById("message").innerText = `Game Over! The word was: ${selectedWord}`;
-        document.getElementById("letter-input").disabled = true;
+        alert(`Game Over! The word was: ${selectedWord}`);
     }
 }
 
@@ -77,9 +76,7 @@ function restartGame() {
     selectedWord = words[Math.floor(Math.random() * words.length)];
     attemptsLeft = 5;
     currentAttempt = 0;
-    document.getElementById("message").innerText = "";
     document.getElementById("attempts").innerText = attemptsLeft;
-    document.getElementById("letter-input").disabled = false;
     createGrid();
 }
 
