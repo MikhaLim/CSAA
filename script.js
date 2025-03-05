@@ -1,13 +1,14 @@
 const words = [
-    "apple", "grape", "pearl", "table", "chair", "money", "smile", "cloud", "light", "brave",
-    "earth", "crown", "flame", "ocean", "sugar", "plant", "stone", "dream", "happy", "music",
-    "peace", "train", "shiny", "bread", "tiger", "fruit", "block", "fancy", "spoon", "dance",
-    "lemon", "magic", "quiet", "sharp", "blend", "frost", "power", "trick", "waste", "chill",
-    "trust", "scene", "lucky", "voice", "match", "river", "smoke", "glove", "clean", "taste"
+    "cream", "grape", "pearl", "table", "chair", "money", "smile", "cloud", "light", "brave",
+    "earth", "crown", "flame", "ocean", "sugar", "plant", "stone", "dream", "cabin", "music",
+    "hacks", "train", "shiny", "bread", "tiger", "fruit", "block", "fancy", "image", "dance",
+    "lemon", "magic", "quiet", "sharp", "blend", "frost", "power", "trick", "waste", "admin",
+    "labor", "yacht", "lucky", "voice", "match", "actor", "smoke", "glove", "clean", "habit"
 ];
 
 let selectedWord = words[Math.floor(Math.random() * words.length)];
 let attemptsLeft = 5;
+let currentAttempt = 0;
 
 document.getElementById("attempts").innerText = attemptsLeft;
 
@@ -16,6 +17,7 @@ function createGrid() {
     grid.innerHTML = "";
     for (let i = 0; i < 5; i++) {
         let row = document.createElement("div");
+        row.classList.add("row");
         for (let j = 0; j < 5; j++) {
             let box = document.createElement("div");
             box.classList.add("box");
@@ -25,23 +27,30 @@ function createGrid() {
     }
 }
 
+document.getElementById("letter-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        submitGuess();
+    }
+});
+
 function submitGuess() {
     let inputElement = document.getElementById("letter-input");
     let guessedWord = inputElement.value.toLowerCase();
     inputElement.value = "";
-
+    
     if (guessedWord.length !== 5 || !/^[a-z]+$/.test(guessedWord)) {
         document.getElementById("message").innerText = "Enter a valid 5-letter word!";
         return;
     }
-
+    
     let gridRows = document.getElementById("word-grid").children;
-    let currentRow = gridRows[5 - attemptsLeft];
-
+    let currentRow = gridRows[currentAttempt];
+    
     for (let i = 0; i < 5; i++) {
         let box = currentRow.children[i];
         box.innerText = guessedWord[i];
-
+        box.classList.remove("correct", "partial", "wrong");
+        
         if (guessedWord[i] === selectedWord[i]) {
             box.classList.add("correct");
         } else if (selectedWord.includes(guessedWord[i])) {
@@ -50,7 +59,8 @@ function submitGuess() {
             box.classList.add("wrong");
         }
     }
-
+    
+    currentAttempt++;
     attemptsLeft--;
     document.getElementById("attempts").innerText = attemptsLeft;
 
@@ -66,6 +76,7 @@ function submitGuess() {
 function restartGame() {
     selectedWord = words[Math.floor(Math.random() * words.length)];
     attemptsLeft = 5;
+    currentAttempt = 0;
     document.getElementById("message").innerText = "";
     document.getElementById("attempts").innerText = attemptsLeft;
     document.getElementById("letter-input").disabled = false;
